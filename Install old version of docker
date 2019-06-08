@@ -1,0 +1,1 @@
+yum install --setopt=obsoletes=0 docker-ce-17.05.0.ce-1.el7.centos
