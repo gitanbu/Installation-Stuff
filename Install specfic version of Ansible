@@ -1,0 +1,74 @@
+
+Install the dependency packages
+===============================
+
+yum install install make git make python-setuptools gcc python-dev libffi-dev libssl-dev python-packaging
+
+Clone the git repository
+========================
+
+git clone git://github.com/ansible/ansible.git
+
+Check the stable branch
+=======================
+git branch -a | grep stable
+
+[root@nexus ansible]# git branch -a | grep stable
+* stable-2.7
+  stable-2.8
+  remotes/origin/stable-1.9
+  remotes/origin/stable-2.0
+  remotes/origin/stable-2.0-network
+  remotes/origin/stable-2.0.0.1
+  remotes/origin/stable-2.1
+  remotes/origin/stable-2.2
+  remotes/origin/stable-2.3
+  remotes/origin/stable-2.4
+  remotes/origin/stable-2.5
+  remotes/origin/stable-2.6
+  remotes/origin/stable-2.7
+  remotes/origin/stable-2.8
+
+---------------------------------
+Check out the stable version
+============================
+
+git checkout stable-2.7
+
+--------------------------------------
+Compile and install the latest version
+
+cd ansible && make && sudo make install
+---------------------------------------
+If you get following error , while make install,Please follow below steps
+
+running make rpm, I received the following error:
+
+Traceback (most recent call last):
+  File "packaging/release/versionhelper/version_helper.py", line 9, in <module>
+    from packaging.version import Version, VERSION_PATTERN
+ImportError: No module named packaging.version
+Makefile:39: *** "version_helper failed".  Stop.
+
+In case of rhel7 follow below steps:
+===================================
+
+install pip using python
+
+#
+wget https://bootstrap.pypa.io/get-pip.py python get-pip.py
+install pythonpip
+
+#yum install -y python-pip
+install packaging
+
+#pip install packaging
+
+
+
+
+
+
+
+
+
