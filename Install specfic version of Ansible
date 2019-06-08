@@ -59,6 +59,8 @@ install pip using python
 wget https://bootstrap.pypa.io/get-pip.py python get-pip.py
 install pythonpip
 
+python get-pip.py
+
 #yum install -y python-pip
 install packaging
 
