@@ -67,6 +67,11 @@ install packaging
 #pip install packaging
 
 
+Now, Ansible should be installed
+
+#which ansible 
+=> /usr/local/bin/ansible
+
 
 
 
