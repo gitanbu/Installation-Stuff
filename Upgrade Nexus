@@ -1,0 +1,18 @@
+$sudo service nexus stop
+
+$unlink nexus
+
+$ln -s nexus-3.15.1-01 nexus
+
+
+$sudo chown -h nexus:nexus nexus
+
+$lrwxrwxrwx   1 nexus      nexus      15 Jul 15 23:02 nexus -> nexus-3.15.1-01
+
+service nexus start
+
+Update the below file properly 
+
+/opt/nexus-3.15.1-01/bin/nexus.vmoptions
+
+then , start the nexus service.
