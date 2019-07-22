@@ -1,5 +1,5 @@
 **This repo is about installaion stuff**
 
-In the words of Abraham Lincoln:
+Installation Documentation:
 
-> Pardon my French
+> You can find here about Installation related documents
