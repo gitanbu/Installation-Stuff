@@ -1,0 +1,235 @@
+           Jira Failover Cluster Setup
+
+   I am using separate server for Database, reverse proxy, and for NFS shared path on cent OS 7
+   
+   nfs.anbu.com - 192.168.56.158
+   jira1.anbu.com - 192.168.56.122
+   jira2.anbu.com - 192.168.56.129
+   
+   Disable firewalld on above servers using below command
+   
+   # systemctl stop firewalld
+   # systemctl disable firewalld
+   
+------------------------------------------------------------   
+Install PostgreSQL DataBase on 192.168.56.158 server
+
+Follow below link to install PostgreSQL on cent OS
+
+https://github.com/gitanbu/Databases/blob/master/PostgreSQL/Install%20on%20Cent%20OS%207
+
+
+vi /var/lib/pgsql/9.6/data/postgresql.conf
+
+listen_addresses = '*'
+
+vi /var/lib/pgsql/9.6/data/pg_hba.conf
+
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            trust
+
+# Allow All Network IPs to connect
+host all all 0.0.0.0/0 md5
+
+  Restart the Database
+  
+#systemctl restart postgresql-9.6
+----------------------------------------------------------------
+
+    Configure NFS on 192.168.56.158 server.
+
+
+# yum install nfs
+
+# vi /etc/exports
+
+/efs/shared/jira 192.168.56.122(rw,sync,no_subtree_check,all_squash,anonuid=1029,anongid=1029)
+/efs/shared/jira 192.168.56.129(rw,sync,no_subtree_check,all_squash,anonuid=1029,anongid=1029)
+
+# exportfs -rav
+exporting 192.168.56.122:/efs/shared/jira
+exporting 192.168.56.129:/efs/shared/jira
+
+# systemctl restart nfs
+# systemctl enable nfs
+
+   Install NFS package on 192.168.56.122 & 192.168.56.129 and mount the share path on both servers
+   ------------------------------------------------------------------------------------------------
+   
+   create a folder on 192.168.56.122 & 192.168.56.129 for mounting
+   
+   #mkdir -p /efs/shared
+   
+# yum install nfs
+
+# vi /etc/fstab
+192.168.56.158:/efs/shared/jira /efs/shared nfs defaults 0 0
+
+# systemctl restart nfs
+# systemctl enable nfs
+
+------------------------------------------------------------------------------------------------------------------------------
+
+Install Apache reverse proxy on 192.168.56.158 server.
+
+# yum install httpd
+
+# systemctl start httpd
+
+#  vi /etc/httpd/conf/httpd.conf
+
+<VirtualHost nfs.anbu.com:80>                                                       #Change this line
+        ProxyRequests off
+
+        ServerName nfs.anbu.com                                                     #Change this line
+
+        <Proxy balancer://jiracluster>
+                # Jira node 1
+                BalancerMember http://jira1.anbu.com:8080 route=node1                #Change this line
+                # Jira node 2
+                BalancerMember http://jira2.anbu.com:8080 route=node2                #Change this line
+
+                # Security "we aren't blocking anyone but this the place to make those changes
+                Order Deny,Allow
+                Deny from none
+                Allow from all
+
+                # Load Balancer Settings
+                # We are not really balancing anything in this setup, but need to configure this
+                ProxySet lbmethod=byrequests
+                ProxySet stickysession=JSESSIONID
+        </Proxy>
+
+        # Here's how to enable the load balancer's management UI if desired
+        <Location /balancer-manager>
+                SetHandler balancer-manager
+
+                # You SHOULD CHANGE THIS to only allow trusted ips to use the manager
+                Order deny,allow
+                Allow from all
+        </Location>
+
+        # Don't reverse-proxy requests to the management UI
+        ProxyPass /balancer-manager !
+        # Reverse proxy all other requests to the Jira cluster
+        ProxyPass / balancer://jiracluster/
+        ProxyPreserveHost on
+</VirtualHost>
+
+
+
+# systemctl restart httpd
+# systemctl enable httpd
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+ Install Jira software on 192.168.56.122 server( This is Node 1)
+ 
+ # useradd jira
+ # mkdir -p /home/jira/AppHome  && mkdir -p /home/jira/AppInstall
+ # wget - O https://product-downloads.atlassian.com/software/jira/downloads/atlassian-jira-software-7.13.8.tar.gz 
+ 
+ # unzip java-calculator-1.0.0.rc16.jar.zip -d /home/jira/AppInstall
+ # chown -R jira:jira /home/jira/*
+ 
+ # vi /home/jira/AppHome/dbconfig.xml
+ 
+   <?xml version="1.0" encoding="UTF-8"?>
+
+<jira-database-config>
+  <name>defaultDS</name>
+  <delegator-name>default</delegator-name>
+  <database-type>postgres72</database-type>
+  <schema-name>public</schema-name>
+  <jdbc-datasource>
+    <url>jdbc:postgresql://nfs.anbu.com:5432/rntbcidb</url>
+    <driver-class>org.postgresql.Driver</driver-class>
+    <username>rntbciuser</username>
+    <password>rntbci</password>
+    <pool-min-size>20</pool-min-size>
+    <pool-max-size>20</pool-max-size>
+    <pool-max-wait>30000</pool-max-wait>
+    <validation-query>select 1</validation-query>
+    <min-evictable-idle-time-millis>60000</min-evictable-idle-time-millis>
+    <time-between-eviction-runs-millis>300000</time-between-eviction-runs-millis>
+    <pool-max-idle>20</pool-max-idle>
+    <pool-remove-abandoned>true</pool-remove-abandoned>
+    <pool-remove-abandoned-timeout>300</pool-remove-abandoned-timeout>
+    <pool-test-on-borrow>false</pool-test-on-borrow>
+    <pool-test-while-idle>true</pool-test-while-idle>
+  </jdbc-datasource>
+</jira-database-config>
+
+ # vi /home/jira/AppInstall/atlassian-jira-software-7.13.8-standalone/bin/user.sh
+ 
+  JIRA_USER="jira"
+  
+ # cd /home/jira/AppInstall/atlassian-jira-software-7.13.8-standalone/bin
+  
+ #  ./start-jira.sh 
+ 
+ # vi /home/jira/AppHome/cluster.properties
+   
+   jira.node.id = node1
+   jira.shared.home = /efs/shared
+
+ # vi /home/jira/AppHome/jira-config.properties 
+
+   jira.websudo.is.disabled = true
+   upgrade.reindex.allowed = false
+   
+ # vi /home/jira/AppInstall/atlassian-jira-software-7.13.8-standalone/atlassian-jira/WEB-INF/classes/jira-application.properties  
+ 
+   jira.home = /home/jira/AppHome
+   
+   
+ # vi /home/jira/AppInstall/atlassian-jira-software-7.13.8-standalone/conf/server.xml
+ 
+   
+Edit 59 th line , modify as below
+
+proxyName="nfs.anbu.com" proxyPort="80"/>
+ 
+Remove comment from 54 th & 60 th line
+
+#cd /home/jira/AppInstall/atlassian-jira-software-7.13.8-standalone/bin
+
+  ./stop-jira.sh
+
+   Create a directory on 192.168.56.129 ( Node 2 )
+   
+# mkdir -p /home/jira/AppHome 
+# mkdir -p /home/jira/AppInstall
+   
+   Copy an installation directory from Node 1 
+   
+   cd /home/jira/AppHome
+   
+# cp data plugins import export caches /efs/shared
+
+# chown -R jira:jira /efs/shared
+
+# chown -R jira:jira /home/jira/*
+ 
+# scp -r /home/jira/AppInstall/ root@192.168.56.129:/home/jira/AppInstall/
+
+
+  Edit cluster.properties from node 2 
+  
+# vi /home/jira/AppHome/cluster.properties
+   
+   jira.node.id = node2
+   jira.shared.home = /efs/shared
+   
+# scp -rap jira-config.properties dbconfig.xml root@192.168.56.129:/home/jira/AppHome/
+   
+
+ 
+ 
+ 
+ 
+
+
+
+
