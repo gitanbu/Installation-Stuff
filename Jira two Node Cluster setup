@@ -130,7 +130,7 @@ Install Apache reverse proxy on 192.168.56.158 server.
  # mkdir -p /home/jira/AppHome  && mkdir -p /home/jira/AppInstall
  # wget - O https://product-downloads.atlassian.com/software/jira/downloads/atlassian-jira-software-7.13.8.tar.gz 
  
- # unzip java-calculator-1.0.0.rc16.jar.zip -d /home/jira/AppInstall
+ # unzip -d atlassian-jira-software-7.13.8.tar.gz /home/jira/AppInstall
  # chown -R jira:jira /home/jira/*
  
  # vi /home/jira/AppHome/dbconfig.xml
