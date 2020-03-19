@@ -225,10 +225,39 @@ Remove comment from 54 th & 60 th line
 # scp -rap jira-config.properties dbconfig.xml root@192.168.56.129:/home/jira/AppHome/
    
 
+# cd /home/jira/AppInstall/atlassian-jira-software-7.13.8-standalone/bin
+ 
+ Start the jira on both servers.
+
+# ./start-jira.sh  
  
  
  
+------------------------------------
+ Cluster nodes
  
+node2 	
+
+Node state: 	Active
+Node is alive: 	true
+
+node1 	
+
+Node state: 	Active
+Node is alive: 	true
+------------------------------------
+
+ File Paths
+Location of Jira Local Home 	/home/jira/AppHome
+Location of Jira Shared Home 	/efs/shared
+Location of entityengine.xml 	file:/home/jira/AppInstall/atlassian-jira-software-7.13.8-standalone/atlassian-jira/WEB-INF/classes/entityengine.xml
+Location of atlassian-jira.log 	/home/jira/AppHome/log/atlassian-jira.log
+Location of indexes 	/home/jira/AppHome/caches/indexes
+Location of attachments 	/efs/shared/data/attachments
+Location of backups 	/efs/shared/export
+
+
+
 
 
 
