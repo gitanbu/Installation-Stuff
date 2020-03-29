@@ -1,0 +1,24 @@
+
+
+Step 1: Installing Required Packages
+
+In order to install Git, you need to ensure that the required packages have been installed on the system. Please key in the following command to install the required packagesbefore you begin compiling the Git source:
+
+yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils
+
+Step 2: Downloading and CompilingGit Source
+
+Once installation of the required packages is done, you must download the Git source code from the kernel git. You may use the following command to download Git:
+
+cd /usr/src
+wget https://www.kernel.org/pub/software/scm/git/git-2.0.1.tar.gz
+tar xzf git-2.0.1.tar.gz
+
+
+Once you have successfully downloaded and extracted the Git source code, please key in the following command in order to compile the source code:
+
+cd git-2.0.1
+make prefix=/usr/local/git all
+make prefix=/usr/local/git install
+echo "export PATH=$PATH:/usr/local/git/bin" >> /etc/bashrc
+source /etc/bashrc
