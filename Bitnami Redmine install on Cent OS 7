@@ -1,0 +1,121 @@
+[root@redmine opt]# ./bitnami-redmine-4.1.1-1-linux-x64-installer.run
+Language Selection
+
+Please select the installation language
+[1] English - English
+[2] Spanish - Español
+[3] Japanese - ???
+[4] Korean - ???
+[5] Simplified Chinese - ????
+[6] Hebrew - ?????
+[7] German - Deutsch
+[8] Romanian - Româna
+[9] Russian - ???????
+Please choose an option [1] : 1
+Bitnami Redmine Stack requires at least 2000MB of memory and the installer has detected 1838MB of memory. This may prevent the application from installing, working properly or cause it to stop functioning due to lack of memory. Visit the following link to learn how to increase the swap space.
+
+https://bitnami.com/lowmemory
+
+Continue with installation? [Y/n]: y
+
+----------------------------------------------------------------------------
+Welcome to the Bitnami Redmine Stack Setup Wizard.
+
+----------------------------------------------------------------------------
+Select the components you want to install; clear the components you do not want
+to install. Click Next when you are ready to continue.
+
+Subversion [Y/n] :y
+
+PhpMyAdmin [Y/n] :y
+
+Redmine : Y (Cannot be edited)
+
+Git [Y/n] :y
+
+Is the selection above correct? [Y/n]: y
+
+----------------------------------------------------------------------------
+Installation folder
+
+Please, choose a folder to install Bitnami Redmine Stack
+
+Select a folder [/opt/redmine-4.1.1-1]:
+
+----------------------------------------------------------------------------
+ Create Admin account
+
+Bitnami Redmine Stack admin user creation
+
+Your real name [root]:
+
+Email Address [anbazhagan5050@yahoo.com]:
+
+Login [root]:
+
+Password :
+Please confirm your password :
+----------------------------------------------------------------------------
+Language for default data configuration
+
+Select your language for default data configuration:
+
+[1] Bosnian
+[2] Bulgarian
+[3] Catalan
+[4] Czech
+[5] Danish
+[6] German
+[7] English
+[8] Spanish
+[9] French
+[10] Galician
+[11] Hebrew
+[12] Hungarian
+[13] Italian
+[14] Japanese
+[15] Korean
+[16] Lithuanian
+[17] Dutch
+[18] Norwegian
+[19] Polish
+[20] Portuguese
+[21] Romanian
+[22] Russian
+[23] Slovak
+[24] Slovenian
+[25] Serbian
+[26] Swedish
+[27] Turkish
+[28] Ukrainian
+[29] Vietnamese
+[30] Chinese
+
+
+Please choose an option [7] :
+
+Do you want to configure mail support? [y/N]: N
+
+----------------------------------------------------------------------------
+Setup is now ready to begin installing Bitnami Redmine Stack on your computer.
+
+Do you want to continue? [Y/n]: Y
+
+----------------------------------------------------------------------------
+Please wait while Setup installs Bitnami Redmine Stack on your computer.
+
+ Installing
+ 0% ______________ 50% ______________ 100%
+ ######################################
+
+----------------------------------------------------------------------------
+Setup has finished installing Bitnami Redmine Stack on your computer.
+
+Launch Redmine application. [Y/n]: Y
+
+Info: To access the Bitnami Redmine Stack, go to
+http://127.0.0.1:80 from your browser.
+Press [Enter] to continue:
+
+
+
