@@ -1,0 +1,54 @@
+/opt/keycloaks/keycloak-11.0.0/modules/system/layers/keycloak/org
+
+/opt/keycloaks/keycloak-11.0.0/modules/system/layers/keycloak/org/postgresql/main - create postgresql and main directory
+
+
+
+
+/backup/keycloak-6.0.1/modules/system/layers/keycloak/org
+
+
+  - postgresql-42.2.6.jar and moudule.xml  and standalone-ha.xml  - need to placed in right path
+
+
+
+cp -rp /opt/keycloaks/keycloak-11.0.0/standalone/configuration/standalone-ha.xml /backup/keycloak-6.0.1/standalone/configuration/
+
+/etc/systemd/system/keycloak.service - modify service file
+
+cp -rp  standalone-ha.xml /opt/keycloaks/keycloak-11.0.0/standalone/configuration/
+
+
+
+
+
+
+
+/backup/keycloak-11.0.0/standalone/configuration
+
+logging.properties - modify the log path
+
+
+bin/jboss-cli.sh --file=bin/migrate-standalone-ha.cli
+
+systemctl daemon-reload
+
+
+
+
+[root@ip-10-98-69-1 ~]# systemctl status keycloak -l
+● keycloak.service - Keycloak
+   Loaded: loaded (/etc/systemd/system/keycloak.service; enabled; vendor preset: disabled)
+   Active: active (running) since Tue 2020-08-04 17:21:26 UTC; 8h ago
+ Main PID: 2962 (standalone.sh)
+   CGroup: /system.slice/keycloak.service
+           ├─2962 /bin/sh /opt/keycloaks/keycloak-6.0.1/bin/standalone.sh --server-config=standalone-ha.xml -b=0.0.0.0 -bprivate=X.X.X.X
+           └─3016 java -D[Standalone] -server -Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true 
+                      -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true 
+                      -Dorg.jboss.boot.log.file=/opt/keycloaks/keycloak-6.0.1/standalone/log/server.log 
+                      -Dlogging.configuration=file:/opt/keycloaks/keycloak-6.0.1/standalone/configuration/logging.properties -jar /opt/keycloaks/keycloak-6.0.1/jboss-modules.jar -mp /opt/keycloaks/keycloak-6.0.1/modules org.jboss.as.standalone 
+                      -Djboss.home.dir=/opt/keycloaks/keycloak-6.0.1 -Djboss.server.base.dir=/opt/keycloaks/keycloak-6.0.1/standalone --server-config=standalone-ha.xml -b=0.0.0.0 -bprivate=X.X.X.X
+
+
+
+
