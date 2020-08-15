@@ -15,4 +15,8 @@ Update the below file properly
 
 /opt/nexus-3.15.1-01/bin/nexus.vmoptions
 
+/opt/nexus-3.15.1-01/bin/nexus.rc
+
+run_as_user="nexus"
+
 then , start the nexus service.
