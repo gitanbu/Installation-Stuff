@@ -1,0 +1,31 @@
+ubuntu 18.04 LTS
+Image id-- ami-02fe94dee086c0c37
+Instance type---t2.xlarge
+
+Installing openstack
+1.sudo snap install microstack --beta --devmode
+2.sudo microstack init --auto --control
+3.sudo snap get microstack config.credentials.keystone-password (to get password)
+4. microstack launch cirros --name test (for launch instance)
+5.ssh -i /home/ubuntu/snap/microstack/common/.ssh/id_microstack cirros@IP Address (to connect instance)
+
+K8s cliuster creation via kubekops
+
+--->1.kops installation
+1.curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+2.chmod +x ./kops
+3.sudo mv ./kops /usr/local/bin/
+
+--->2.kubectl installation
+1.curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+2.chmod +x ./kubectl
+3.sudo mv ./kubectl /usr/local/bin/kubectl
+
+3.aws s3 mb s3://mybucket(bucket Name)
+4.ssh-keygen
+5.export NAME=damo.k8s.local
+6.export KOPS_STATE_STORE=s3://mybucket(bucket name)
+7.kops create cluster --zones us-east-1a,east-1b ${NAME}
+
+finally 
+kops get cluster
